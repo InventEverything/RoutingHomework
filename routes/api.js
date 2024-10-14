@@ -11,7 +11,8 @@ router.get('/person', function(req, res, next) {
     res.status(200);
     res.send(data);
 });
-
+// check lecture 10-14-24 for rewrite of filter method to index of method
+// put if statements to verify correct information before giving a response
 router.get('/person/:id', function(req, res, next) {
     res.status(200);
     res.send(data.filter(person => {
