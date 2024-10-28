@@ -1,5 +1,5 @@
 var express = require('express');
-var router = express.Router();
+const router = express.Router();
 
 var data = [
     { id: 0, name: "Aaron", username: "userA" },
@@ -14,10 +14,15 @@ router.get('/person', function(req, res, next) {
 // check lecture 10-14-24 for rewrite of filter method to index of method
 // put if statements to verify correct information before giving a response
 router.get('/person/:id', function(req, res, next) {
-    res.status(200);
-    res.send(data.filter(person => {
-       person.id === req.params.id
-    }));
+    let index = data.findIndex(person => person.id == req.params.id);
+
+    if (index >= 0){
+        res.send(data[index]);
+        res.status(200);
+    } else {
+        res.status(404);
+        res.json({message: "index not found"});
+    }
 });
 
 router.post('/person', function(req, res, next) {
@@ -29,20 +34,28 @@ router.post('/person', function(req, res, next) {
 
 router.put('/person/:id', function(req, res, next) {
     // note we are adding any data sent to the endpoint to the array. this really needs some checking.
-   res.status(200);
+    let index = data.findIndex(person => person.id == req.params.id);
 
-   var index = data.indexOf(person => {
-     return person.id === req.params.id;
-   });
-
-   data[index] = req.body;
-   res.send(data[index]);
+    if (index >= 0){
+        res.status(200);
+        data[index] = req.body;
+        res.send(data[index]);
+    } else {
+        res.status(404);
+        res.json({message: "index not found"});
+    }
 });
 
 router.delete('/person/:id', function(req, res, next) {
-    res.status(200);
-    data[index] = data.filter(person => person.id != req.params.id);
-    res.send(data[index]);
+    let index = data.findIndex(person => person.id == req.params.id);
+    if(index >= 0){
+        res.status(200);
+        data = data.filter(person => person.id != req.params.id);
+        res.json({message: "index removed"});
+    } else {
+        res.status(404);
+        res.json({message: "index not found"});
+    }
  });
  
 module.exports = router;
